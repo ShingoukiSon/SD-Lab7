@@ -1,29 +1,20 @@
 #pragma once
 
-#define DIM 5
-struct stivas
+#include <string.h>
+#include <fstream>
+struct element
 {
-    int vect[DIM];
-    int vf;
+    std::string key;
+    element *succ;
 };
 
-void init(stivas &s);
-bool isEmpty(const stivas &s);
-bool isFull(const stivas &s);
-void push (stivas &s, int val);
-void pop (stivas &s);
-int top (const stivas &s);
-
-struct stivad
-{
-    int data;
-    stivad *succ;
-};
-
-void initD(stivad *&s);
-bool isEmptyD(stivad *s);
-void pushD (stivad *&s, int val);
-void popD (stivad *&s);
-int topD (stivad *s);
-void postfixare(char expresie[], char postfix[], stivad *s);
-void evaluarepostfix(stivad *&s,char postfix[]);
+void initHT(element *HT[],int M);
+int f(std::string key);
+element *find(element *HT[],int M, std::string key);
+void insert(element *HT[],int M, std::string key);
+void AfisareTabel(element *HT[], int M);
+void Afisare(element *HT[],int M, std::string key);
+void Stergere(element *HT[],int M, std::string key);
+int numarare(element *HT[], int M);
+void Cluster(element *HT[],int M);
+void frec(element *HT[], int M);

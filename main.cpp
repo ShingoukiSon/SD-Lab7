@@ -1,37 +1,29 @@
-#include "functii.h"
 #include <iostream>
+#include <string.h>
+#include "functii.h"
+#include <fstream>
 using namespace std;
-
+ifstream fin("dictionar_termeni_PC.txt");
 int main()
 {
-    /*stivas s;
-    init(s);
-    int x,y;
-    cin>>x>>y;
-    push(s,x);
-    push(s,y);
-    top(s);
+    int M,i;
+    M=26;
+    element *HT[M];
+    initHT(HT,M);
+    string key;
+    while(fin>>key)
+    {
+        insert(HT,M,key);
+    }
+    fin.close();
     cout<<endl;
-    pop(s);
-    top(s);
-    stivad *stiva;
-    initD(stiva);
+    AfisareTabel(HT,M);
+    Afisare(HT,M,"RAM");
+    Afisare(HT,M,"RA");
+    Afisare(HT,M,"[][]");
     cout<<endl;
-    cin>>x>>y;
-    pushD(stiva,x);
-    pushD(stiva,y);
-    topD(stiva);
+    Cluster(HT,M);
     cout<<endl;
-    popD(stiva);
-    topD(stiva);*/
-    stivad *s;
-    initD(s);
-    char expresie[50],postfix[50]={};
-    cin>>expresie;
-    postfixare(expresie,postfix,s);
-    cout<<postfix;
-    evaluarepostfix(s,postfix);
-    int rez=topD(s)-48;
-    cout<<endl<<rez;
-    return 0;
+    frec(HT,M);
+    
 }

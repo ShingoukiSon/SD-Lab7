@@ -1,196 +1,201 @@
-#include "functii.h"
 #include <iostream>
 #include <string.h>
+#include "functii.h"
 using namespace std;
 
-void init(stivas &s)
-{
-    s.vf=-1;
-}
 
-bool isEmpty(const stivas &s)
-{
-    if(s.vf==-1)
-        return true;
-    else
-        return false;
-}
 
-bool isFull(const stivas &s)
+void initHT(element *HT[],int M)
 {
-    if(s.vf==DIM-1)
-        return true;
-    else
-        return false;
-}
-void push (stivas &s, int val)
-{
-    if(!isFull(s))
+    for(int i=0;i<M;i++)
     {
-        s.vf++;
-        s.vect[s.vf]=val;   
-    }
-    else
-    {
-        cout<<"stiva este plina\n";
+        HT[i]=0;
     }
 }
-
-void pop (stivas &s)
+int f(string key)
 {
-    if(!isEmpty(s))
-    {
-        s.vf--;
-    }
-    else
-    {
-        cout<<"stiva vida\n";
-    }
+    int r;
+    if(key[0]>='A' && key[0]<='Z')
+        r=key[0]-65;
+    else if (key[0]>='a' && key[0]<='z')
+        r=key[0]-97;
+    else 
+        r=100;
+    return r;
 }
-
-int top (const stivas &s)
+element *find(element *HT[],int M, string key)
 {
-    if(!isEmpty(s))
+    int h=f(key);
+    element *p=HT[h];
+    while(p)
     {
-        return s.vect[s.vf];
+        if(p->key==key)
+            return p;
+        p=p->succ;
+    }
+    p=0;
+    return p;
+}
+void insert(element *HT[],int M, string key)
+{
+    element *p;
+    p=new element;
+    p->key=key;
+    int h=f(key);
+    if(HT[h]==0 and h!=100)
+    {
+        HT[h]=p;
+        HT[h]->succ=0;
     }
     else
     {
-        return 0;
-    }
-}
-
-void initD(stivad *&s)
-{
-    s=0;
-}
-
-bool isEmptyD(stivad *s)
-{
-    if(s==0)
-        return true;
-    else
-        return false;
-}
-
-void pushD (stivad *&s, int val)
-{
-    stivad *p=new stivad;
-    p->data=val;
-    p->succ=s;
-    s=p;
-}
-
-void popD (stivad *&s)
-{
-    if(!isEmptyD(s))
-    {
-        stivad *p=s;
-        s=s->succ;
-        delete p;
-    }
-    else
-    {
-        cout<<"stiva vida\n";
-    }
-}
-
-int topD (stivad *s)
-{
-    if(!isEmptyD(s))
-    {
-        return s->data;
-    }
-    
-    return 0;
-}
-
-void postfixare(char expresie[], char postfix[], stivad *s)
-{
-    int i,j=0;
-    for(i=0;i<strlen(expresie);i++)
-    {
-        if(expresie[i]>='0' && expresie[i]<='9')
-            postfix[j++]=expresie[i];
-        else if(strchr("+-*/",expresie[i]))
-            {
-                if(isEmptyD(s))
-                    {
-                        pushD(s,expresie[i]);
-                    }
-                else
-                {   
-                    int ok=1;
-                    while(topD(s)!='(' && s!=0 && ok)
-                    {
-                        if((expresie[i]=='*' || expresie[i]=='/') && (topD(s)=='+' || topD(s)=='-'))
-                        {   
-                            ok=0;
-                        }
-                        else
-                        {
-                            postfix[j++]=topD(s);
-                            popD(s);
-                        }
-                    }
-                    pushD(s,expresie[i]);
-                }
-            }
-            else if(expresie[i]=='(')
-                pushD(s,expresie[i]);
-                else if(expresie[i]==')')
-                {
-                    while(topD(s)!='(')
-                    {
-                        postfix[j++]=topD(s);
-                        popD(s);
-                    }
-                    popD(s);
-                }
-    }
-    while(s!=0)
-    {   
-        postfix[j++]=topD(s);
-        popD(s);
-    }
-}
-void evaluarepostfix(stivad *&s,char postfix[])
-{
-    int i=0,x,y,rez;
-    while(postfix[i])
-    {
-        if(postfix[i]>='0' && postfix[i]<='9')
-            pushD(s,postfix[i]);
-        else if(strchr("+-*/",postfix[i]))
+        element *q=find(HT,M,key);
+        if(q==0)
         {
-            x=topD(s)-48;
-            popD(s);
-            y=topD(s)-48;
-            popD(s);
-            switch (postfix[i])
-            {
-            case '+':
-                rez=x+y;
-                break;
-            
-            case '-':
-                rez=y-x;
-                break;
-            case '*':
-                rez=x*y;
-                break;
-            case '/':
-                rez=y/x;
-                break;
-            }
-            pushD(s,rez+48);
+            p->succ=HT[h];
+            HT[h]=p;
         }
-        i++;
     }
 
 }
 
-void prefixrec(char expresie[], char prefix[], stivad *s)
+void AfisareTabel(element *HT[], int M)
 {
-    
+    element *p;
+    for (int i=0;i<M;i++)
+    {
+        if(HT[i])
+        {   
+            p=HT[i];
+            while(p)
+            {
+                cout<<p->key<<' ';
+                p=p->succ;
+            }
+            cout<<endl;
+        }
+    }   
+}
+void Afisare(element *HT[],int M, string key)
+{
+    int ok=1,h;
+    h=f(key);
+    if (h==100)
+    {
+        cout<<"n-am gasit"<<endl;
+    }
+    else
+    {
+        element *p=find(HT,M,key);
+        if(p)
+        {
+            cout<<p->key<<endl;
+        }
+        else
+            cout<<"n-am gasit boss"<<endl;
+    }
+}
+
+void Stergere(element *HT[],int M, string key)
+{
+    int ok=1,h;
+    h=f(key);
+    if (h==100)
+    {
+        cout<<"n-am gasit"<<endl;
+    }
+    else
+    {
+        if(HT[h]->key==key)
+        {
+            element*p=HT[h];
+            HT[h]=HT[h]->succ;
+            delete p;
+        }
+        else
+        {
+        element *p=HT[h];
+        while(p->succ)
+        {
+            if(p->succ->key==key)
+            {
+                element *q=p;
+                q=q->succ;
+                p->succ=p->succ->succ;
+                delete q;
+                break;
+            }
+            p=p->succ;
+        }
+        cout<<"n-am gasit boss"<<endl;
+        }
+    }
+}
+int numarare(element *HT[], int M)
+{
+    int c=0;
+    for (int i=0;i<M;i++)
+    {
+        if(HT[i])
+        {   
+            element *p=HT[i];
+            while(p)
+            {
+                c++;
+                p=p->succ;
+            }
+        }
+    }
+    return c;
+}
+void Cluster(element *HT[],int M)
+{
+    int N=numarare(HT,M),c;
+    float alpha=N/M,sum=0;
+    for (int i=0;i<M;i++)
+    {   
+        c=0;
+        if(HT[i])
+        {   
+            element *p=HT[i];
+            while(p)
+            {
+                c++;
+                p=p->succ;
+            }
+        }
+        sum=sum+(float)(c*c)/N;
+    }
+    sum=sum-alpha;
+    cout<<sum<<endl;
+    if(sum>1)
+        cout<<"tabela hash este afectate de clusterizare";
+    else
+        cout<<"tabela hash nu este afectate de clusterizare";
+}
+void frec(element *HT[], int M)
+{
+    int c[26]={};
+    char s[]="Aa";
+    for (int i=0;i<M;i++)
+    {
+        if(HT[i])
+        {   
+            element *p=HT[i];
+            while(p)
+            {
+                if(p->key[0]>='A' && p->key[0]<='Z')
+                    c[p->key[0]-65]++;
+                if(p->key[0]>='a' && p->key[0]<='z')
+                    c[p->key[0]-97]++;
+                p=p->succ;
+            }
+        }
+    }
+    for (int i=0;i<26;i++)
+    {
+        cout<<s<<' '<<c[i]<<endl;
+        s[0]++;
+        s[1]++;
+    }
 }
