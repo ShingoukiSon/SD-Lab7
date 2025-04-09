@@ -1,16 +1,29 @@
 #pragma once
 
-#include <string.h>
-#include <fstream>
-struct element
+#define DIM 5
+struct stivas
 {
-    std::string key;
-    element *succ;
+    int vect[DIM];
+    int vf;
 };
 
-void initHT(element *HT[],int M);
-int f(std::string key);
-element *find(element *HT[],int M, std::string key);
-void insert(element *HT[],int M, std::string key);
-void AfisareTabel(element *HT[], int M);
-void Afisare(element *HT[],int M, std::string key);
+void init(stivas &s);
+bool isEmpty(const stivas &s);
+bool isFull(const stivas &s);
+void push (stivas &s, int val);
+void pop (stivas &s);
+int top (const stivas &s);
+
+struct stivad
+{
+    int data;
+    stivad *succ;
+};
+
+void initD(stivad *&s);
+bool isEmptyD(stivad *s);
+void pushD (stivad *&s, int val);
+void popD (stivad *&s);
+int topD (stivad *s);
+void postfixare(char expresie[], char postfix[], stivad *s);
+void evaluarepostfix(stivad *&s,char postfix[]);
